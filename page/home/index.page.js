@@ -2,6 +2,7 @@ import * as hmUI from '@zos/ui'
 import { getText } from '@zos/i18n'
 import { getDeviceInfo, SCREEN_SHAPE_SQUARE } from '@zos/device'
 import { log as Logger } from '@zos/utils'
+import { push } from '@zos/router'
 
 import { BasePage } from '@zeppos/zml/base-page'
 import {
@@ -44,7 +45,7 @@ Page(
       writeFileSync(this.state.dataList, false)
     },
     onCall(req) {
-      const dataList = req.result.map((i) => ({ name: i, img_src: 'delete.png' }))
+      const dataList = req.result.map((i) => ({ name: i.name, img_src: 'delete.png' }))
       logger.log('call dataList', dataList)
       this.refreshAndUpdate(dataList)
     },
@@ -53,13 +54,17 @@ Page(
         method: 'GET_SOCIAL_LIST'
       })
         .then(({ result }) => {
-          this.state.dataList = result.map((d) => ({ name: d.name, url: d.url, img_src: 'delete.png' }))
+          this.state.dataList = result
+            .filter(d => d.url && d.url.trim() !== '')  // filtra solo quelli con URL non vuoto
+            .map(d => ({ name: d.name, url: d.url, img_src: '', color: d.color }))
           logger.debug('this.state.dataList', this.state.dataList)
           this.createAndUpdateList()
         })
         .catch((res) => {
           this.createAndUpdateList()
         })
+      this.createAndUpdateList()
+
     },
     deleteSocialItem(index) {
       this.request({
@@ -108,16 +113,11 @@ Page(
     },
     createAndUpdateList(showEmpty = true) {
       const _scrollListItemClick = (list, index, key) => {
-        if (key === 'img_src') {
-          this.deleteTodoItem(index)
+        const item = this.state.dataList[index]
+        if (item && item.url) {
+          this.showQRCode(item)
         } else {
-          const item = this.state.dataList[index]
-          // Recupera l'url del social cliccato
-          if (item && item.url) {
-            this.showQRCode(item.url)
-          } else {
-            hmUI.showToast({ text: getText('noUrlAvailable') })
-          }
+          hmUI.showToast({ text: getText('noUrlAvailable') })
         }
       }
       const { scrollList, dataList } = this.state
@@ -157,22 +157,16 @@ Page(
         this.createAndUpdateList()
       }, 20)
     },
-    showQRCode(url) {
-      if (this.state.qrCodeWidget) {
-        this.state.qrCodeWidget.setProperty(hmUI.prop.VISIBLE, true)
-        this.state.qrCodeWidget.setProperty(hmUI.prop.URL, url)
-      } else {
-        this.state.qrCodeWidget = hmUI.createWidget(hmUI.widget.QR_CODE, {
-          x: 20,
-          y: 50,
-          size: 200,
-          url: url,
-          visible: true,
-          onClick: () => {
-            this.state.qrCodeWidget.setProperty(hmUI.prop.VISIBLE, false)
-          }
-        })
+    showQRCode(item) {
+      const element = {
+        url: item.url,
+        title: item.name,
+        color: item.color
       }
+      push({
+        url: 'page/home/qr.page',
+        params:  JSON.stringify(element),
+      })
     }
   })
 )

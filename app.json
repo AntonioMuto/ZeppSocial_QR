@@ -7,10 +7,10 @@
       "name": "1.0.0"
     },
     "appId": 20001,
-    "appName": "Todo List",
+    "appName": "Socials List",
     "icon": "icon.png",
     "vender": "zepp",
-    "description": "todo list application"
+    "description": "social list application"
   },
   "runtime": {
     "apiVersion": {
@@ -23,7 +23,7 @@
     "gt": {
       "module": {
         "page": {
-          "pages": ["page/home/index.page"]
+          "pages": ["page/home/index.page", "page/home/qr.page"]
         },
         "app-side": {
           "path": "app-side/index"

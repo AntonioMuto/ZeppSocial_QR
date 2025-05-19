@@ -18,6 +18,22 @@ AppSideService(
         res(null, {
           result: getSocialList()
         })
+      } else if (req.method === 'GET_QR_IMAGE') {
+        const url = req.params?.url
+        console.log('############ QR ########', url)
+        if (!url || typeof url !== 'string' || url.trim() === '') {
+          return res({ error: 'Invalid URL' })
+        }
+    
+        QRCode.toDataURL(url, { errorCorrectionLevel: 'H' }, (err, dataUrl) => {
+          if (err) {
+            console.log('QR generation failed', err)
+            return res({ error: 'QR generation failed' })
+          }
+          console.log('dataUrl', dataUrl)
+          res(null, { image: dataUrl }) // <-- base64 image sent to watch
+        })
+    
       } else if (req.method === 'ADD') {
         // 这里补充一个
         const socialList = getSocialList()

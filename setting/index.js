@@ -4,7 +4,7 @@ import { DEFAULT_SOCIAL_LIST, SOCIAL_ICONS } from './../utils/constants'
 AppSettingsPage({
   state: {
     socialList: [
-      { name: 'Facebook', url: 'a' },
+      { name: 'Facebook', url: '' },
       { name: 'Instagram', url: ''},
       { name: 'Twitter', url: ''},
       { name: 'LinkedIn', url: ''},
@@ -21,7 +21,12 @@ AppSettingsPage({
     if (stored) {
       this.state.socialList = JSON.parse(stored)
     } else {
-      this.state.socialList = DEFAULT_SOCIAL_LIST.map(name => ({ name, url: '', default: true }))
+      this.state.socialList = DEFAULT_SOCIAL_LIST.map(item => ({
+        name: item.name,
+        url: '',
+        default: true,
+        color: item.color
+      }))
     }
   },
 
@@ -66,7 +71,7 @@ AppSettingsPage({
             color: 'white',
             textAlign: 'center',
             padding: '0 15px',
-            width: '17%'
+            width: '20%'
           }
         },
         [
@@ -104,7 +109,7 @@ AppSettingsPage({
             padding: '10px',
             marginBottom: '12px',
             borderRadius: '8px',
-            backgroundColor: isLinked ? '#E0F7FA' : '#F0F0F0',
+            backgroundColor: isLinked ? social.color : '#f5f5f5',
             border: '1px solid #ccc',
             display: 'flex',
             flexDirection: 'row',

@@ -1,5 +1,5 @@
 {
-  "name": "todolist",
+  "name": "socialslist",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -12,6 +12,7 @@
     "@zeppos/device-types": "^3.0.0"
   },
   "dependencies": {
-    "@zeppos/zml": "^0.0.9"
+    "@zeppos/zml": "^0.0.9",
+    "qrcode": "^1.5.4"
   }
 }

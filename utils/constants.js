@@ -1,10 +1,35 @@
 
 export const DEFAULT_SOCIAL_LIST = [
-    'Facebook',
-    'Instagram',
-    'Twitter',
-    'LinkedIn',
-    'YouTube'
+    {
+      name: 'Facebook',
+      url: '',
+      default: true,
+      color: "0x3b5998"
+    },
+    {
+      name: 'Instagram',
+      url: '',
+      default: true,
+      color: "0xE1306C"
+    },
+    {
+      name: 'Twitter',
+      url: '',
+      default: true,
+      color: "0x1DA1F2"
+    },
+    {
+      name: 'LinkedIn',
+      url: '',
+      default: true,
+      color: "0x0077B5"
+    },
+    {
+      name: 'YouTube',
+      url: '',
+      default: true,
+      color: "0xFF0000"
+    }
   ]
 
 export const SOCIAL_ICONS = {
