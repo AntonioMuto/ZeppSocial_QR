@@ -26,7 +26,7 @@ Page({
         const y = (height - size) / 2
 
 
-
+        logger.debug('element', element)
         hmUI.createWidget(hmUI.widget.FILL_RECT, {
             x: 0,
             y: 0,

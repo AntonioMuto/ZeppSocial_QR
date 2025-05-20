@@ -6,3 +6,9 @@ msgstr "EDIT SOCIALS"
 
 msgid "deleteSocials"
 msgstr "DELETE"
+
+msgid "addNewSocial"
+msgstr "ADD NEW SOCIAL"
+
+msgid "editName"
+msgstr "EDIT NAME"
