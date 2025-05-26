@@ -1,5 +1,4 @@
 # ZeppSocial_QR
-Share your socials on your AmazFit smartWatch ⛶⌚
 
 **Social QR Share for ZeppOS**
 
