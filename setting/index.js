@@ -16,7 +16,6 @@ AppSettingsPage({
 
   setState(props) {
     this.state.props = props
-    props.settingsStorage.cl
     const stored = props.settingsStorage.getItem('socialList')
     if (stored) {
       this.state.socialList = JSON.parse(stored)
@@ -31,58 +30,57 @@ AppSettingsPage({
   },
 
   setItem() {
-    // Salva TUTTI i social, anche quelli vuoti, per mantenere la lista completa
     this.state.props.settingsStorage.setItem('socialList', JSON.stringify(this.state.socialList))
     console.log('socialList', this.state.socialList)
   },
+
   addSocialList(val) {
     this.state.socialList = [...this.state.socialList, val]
     this.setItem()
   },
+
   deleteSocialList(index) {
     if (this.state.socialList[index].default) {
       this.state.socialList[index].url = ''
     } else {
-      this.state.socialList = this.state.socialList.filter((_, ind) => {
-        return ind !== index
-      })
+      this.state.socialList = this.state.socialList.filter((_, ind) => ind !== index)
     }
     this.setItem()
   },
+
   updateSocialUrl(index, url) {
     this.state.socialList[index].url = url.trim()
     this.state.editingIndex = null
     this.setItem()
     this.build(this.state.props)
   },
+
   updateSocialName(index, name) {
     const trimmed = name.trim()
     const MAX_LENGTH = 20
-  
-    if (trimmed.length > MAX_LENGTH) {
-      return
-    }
-  
+    if (trimmed.length > MAX_LENGTH) return
+
     this.state.socialList[index].name = trimmed
     this.setItem()
     this.build(this.state.props)
   },
+
   build(props) {
     this.setState(props)
+
     const contentItems = this.state.socialList.map((social, index) => {
       const isEditing = this.state.editingIndex === index
       const isLinked = social.url && social.url.trim() !== ''
+
       const addBTN = View(
         {
           style: {
-            fontSize: '11px',
-            lineHeight: '30px',
-            borderRadius: '30px',
             background: '#409EFF',
-            color: 'white',
-            textAlign: 'center',
-            padding: '0 15px',
-            width: '100%'
+            borderRadius: '6px',
+            padding: '6px 10px',
+            width: '100%',
+            boxSizing: 'border-box',
+            maxWidth: '40%'
           }
         },
         [
@@ -90,39 +88,42 @@ AppSettingsPage({
             label: isLinked ? gettext('editSocials') : gettext('addSocials'),
             onChange: (val) => {
               this.updateSocialUrl(index, val)
+            },
+            style: {
+              fontSize: 12,
+              padding: '6px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              width: '100%',
+              background: 'white',
+              color: '#333'
             }
           })
         ]
       )
 
-      const deleteBTN =
-        Button({
-          style: {
-            fontSize: '12px',
-            lineHeight: '30px',
-            borderRadius: '30px',
-            background: 'red',
-            color: 'white',
-            textAlign: 'center',
-            padding: '0 15px',
-            width: '10%'
-          },
-          label: gettext('deleteSocials'),
-          onClick: (val) => {
-            this.deleteSocialList(index, val)
-          }
-        })
+      const deleteBTN = Button({
+        style: {
+          fontSize: '12px',
+          padding: '6px 10px',
+          borderRadius: '6px',
+          background: '#F56C6C',
+          color: 'white',
+          border: 'none',
+          maxWidth: '30%'
+        },
+        label: gettext('deleteSocials'),
+        onClick: () => {
+          this.deleteSocialList(index)
+        }
+      })
 
-      const editNameBTN =View(
+      const editNameBTN = View(
         {
           style: {
-            fontSize: '11px',
-            lineHeight: '30px',
-            borderRadius: '30px',
-            background: '#409EFF',
-            color: 'white',
-            textAlign: 'center',
-            padding: '0 15px',
+            background: '#51d67b',
+            borderRadius: '6px',
+            padding: '4px 6px',
             width: '100%'
           }
         },
@@ -131,26 +132,33 @@ AppSettingsPage({
             label: gettext('editName'),
             onChange: (val) => {
               this.updateSocialName(index, val)
+            },
+            style: {
+              fontSize: 12,
+              padding: '6px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              width: '100%',
+              background: 'white',
+              color: '#333',
+              maxWidth: '30%'
             }
           })
         ]
       )
 
-      
-
       return View(
         {
           style: {
-            padding: '10px',
+            padding: '12px',
             marginBottom: '12px',
             borderRadius: '8px',
-            backgroundColor: isLinked ? social.color : '#f5f5f5',
-            border: '1px solid #ccc',
+            backgroundColor: '#fff',
+            border: '1px solid #dcdfe6',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
             display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            opacity: isLinked ? 1 : 0.5
+            flexDirection: 'column',
+            opacity: isLinked ? 1 : 0.6
           },
           key: social.name
         },
@@ -161,7 +169,7 @@ AppSettingsPage({
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: '8px'
+                marginBottom: '8px'
               }
             },
             [
@@ -170,36 +178,25 @@ AppSettingsPage({
                 style: {
                   width: 24,
                   height: 24,
-                  marginRight: 16
+                  marginRight: 10
                 }
               }),
               Text({
                 style: {
                   fontSize: 14,
                   fontWeight: 'bold',
-                  color: 'black',
-                  marginBottom: isEditing ? 6 : 0
+                  color: '#303133'
                 }
-              },
-                social.name
-              ),
-              !social.default && editNameBTN
+              }, social.name)
             ]
           ),
-          // Icona a sinistra
-
-          // Nome + input (centrale)
-          View(
+          isEditing && View(
             {
               style: {
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                marginRight: 16
+                marginBottom: '8px'
               }
             },
             [
-              isEditing &&
               TextInput({
                 value: social.url,
                 placeholder: 'https://yourprofile.com',
@@ -209,32 +206,35 @@ AppSettingsPage({
                 },
                 style: {
                   fontSize: 12,
-                  padding: '4px 8px',
-                  borderRadius: 6
+                  padding: '6px',
+                  borderRadius: '4px',
+                  border: '1px solid #ccc',
+                  width: '100%',
+                  background: 'white',
+                  color: '#333'
                 }
               })
             ]
           ),
 
-          // Pulsanti allineati a destra
           View(
             {
               style: {
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-                gap: '8px'
+                gap: '8px',
+                justifyContent: 'space-between'
               }
             },
             [
-              addBTN,
+              !social.default && View({ style: { width: '30%' } }, [editNameBTN]),
+              View({ style: { flex: 1 } }, [addBTN]),
               (isLinked || !social.default) && deleteBTN
             ]
           )
         ]
       )
-
-
     })
 
     return View(
@@ -243,7 +243,8 @@ AppSettingsPage({
           padding: '16px',
           display: 'flex',
           flexDirection: 'column',
-          height: '100%'
+          height: '100vh',
+          position: 'relative'
         }
       },
       [
@@ -251,35 +252,41 @@ AppSettingsPage({
           {
             style: {
               flex: 1,
-              overflowY: 'auto'
+              overflowY: 'auto',
+              marginBottom: '60px'
             }
           },
           contentItems
         ),
         Button({
-          label: gettext('addNewSocial'), // oppure direttamente "Aggiungi nuovo social"
+          label: gettext('addNewSocial'),
           onClick: () => {
             this.addSocialList({
               name: 'Nuovo Social',
               url: '',
-              color: '#66ff00',
+              color: '0xba6804',
               default: false
             })
             this.build(this.state.props)
           },
           style: {
-            marginTop: '16px',
-            padding: '10px 20px',
+            position: 'absolute',
+            bottom: '16px',
+            left: '16px',
+            right: '16px',
+            padding: '12px 20px',
             fontSize: '14px',
-            borderRadius: '30px',
+            fontWeight: 'bold',
+            borderRadius: '6px',
             background: '#67C23A',
             color: 'white',
+            border: 'none',
             textAlign: 'center',
-            width: '100%'
+            zIndex: 1000,
+            width: 'auto'
           }
         })
       ]
     )
-
   }
 })

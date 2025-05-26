@@ -8,7 +8,6 @@ const logger = Logger.getLogger('qr-page')
 Page({
     onInit(param) {
         console.log('onInit param raw:', param)
-        // Se param è una stringa, prova a fare il parse JSON
         let element = param
         if (typeof param === 'string') {
             try {
@@ -21,7 +20,7 @@ Page({
         console.log('url:', element?.url)
 
         const { width, height } = getDeviceInfo()
-        const size = 240 // larghezza/altezza del QR code
+        const size = 240 
         const x = (width - size) / 2
         const y = (height - size) / 2
 
@@ -37,13 +36,13 @@ Page({
 
         hmUI.createWidget(hmUI.widget.TEXT, {
             x: x,
-            y: y - 30 - 10,      // 30 è l'altezza testo, 10 il margine sopra il QR
+            y: y - 50 - 10,
             w: size,
-            h: 30,
+            h: 50,
             text: element.title,
             color: 0xFFFFFF,
             align_h: hmUI.align.CENTER,
-            text_size: 20
+            text_size: 30
         })
 
 

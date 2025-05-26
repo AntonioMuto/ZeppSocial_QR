@@ -45,7 +45,8 @@ Page(
       writeFileSync(this.state.dataList, false)
     },
     onCall(req) {
-      const dataList = req.result.map((i) => ({ name: i.name, img_src: 'delete.png' }))
+      const dataList = req.result.filter(d => d.url && d.url.trim() !== '')
+      .map(d => ({ name: d.name, url: d.url, img_src: '', color: d.color }))
       logger.log('call dataList', dataList)
       this.refreshAndUpdate(dataList)
     },
@@ -55,7 +56,7 @@ Page(
       })
         .then(({ result }) => {
           this.state.dataList = result
-            .filter(d => d.url && d.url.trim() !== '')  // filtra solo quelli con URL non vuoto
+            .filter(d => d.url && d.url.trim() !== '')
             .map(d => ({ name: d.name, url: d.url, img_src: '', color: d.color }))
           logger.debug('this.state.dataList', this.state.dataList)
           this.createAndUpdateList()

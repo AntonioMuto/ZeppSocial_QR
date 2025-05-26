@@ -1,8 +1,8 @@
 msgid "addSocials"
-msgstr "ADD SOCIALS"
+msgstr "ADD"
 
 msgid "editSocials"
-msgstr "EDIT SOCIALS"
+msgstr "EDIT"
 
 msgid "deleteSocials"
 msgstr "DELETE"

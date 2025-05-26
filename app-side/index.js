@@ -31,11 +31,10 @@ AppSideService(
             return res({ error: 'QR generation failed' })
           }
           console.log('dataUrl', dataUrl)
-          res(null, { image: dataUrl }) // <-- base64 image sent to watch
+          res(null, { image: dataUrl })
         })
     
       } else if (req.method === 'ADD') {
-        // 这里补充一个
         const socialList = getSocialList()
         const newSocialList = [...socialList, String(Math.floor(Math.random() * 100))]
         settingsLib.setItem('socialList', JSON.stringify(newSocialList))
